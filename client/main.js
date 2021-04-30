@@ -1,6 +1,4 @@
-import {
-    client as WebSocketClient
-} from 'websocket';
+var WebSocketClient = require('websocket').client;
 
 var client = new WebSocketClient();
 
