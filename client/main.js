@@ -24,4 +24,11 @@ client.on('connect', (connection) => {
     sendNumber();
 });
 
-client.connect('ws://localhost:8080/', 'echo-protocol');
+var options = {
+    headers: {
+        "Authorization": "Bearer token",
+        "x-ms-client-request-id": "user"
+    }
+}
+
+client.connect('ws://localhost?login=test&token=test2', 'echo-protocol', null, null, options);
