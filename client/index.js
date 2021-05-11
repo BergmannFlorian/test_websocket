@@ -1,37 +1,52 @@
-let socket = new WebSocket('ws://localhost?login=test&token=test2', 'echo-protocol');
+let socket;
 
-socket.onopen = function (e) {
-    console.log("[open] Connection established");
-    console.log("Sending to server");
-    socket.send("My name is John");
-};
-
-socket.onmessage = function (event) {
-    console.log(`[message] Data received from server: ${event.data}`);
-    var log = document.createElement('p');
-    log.content = "Received: '" + message.utf8Data + "'";
+const log = function (message) {
+    console.log(message);
+    var log = document.createElement('div');
+    var date = new Date
+    log.textContent = date.toLocaleString() + ' ' + message; //slice(0, 24)
     document.getElementById('log').appendChild(log);
 };
 
-socket.onclose = function (event) {
+const onopen = () => {
+    log("[open] Connection established");
+
+    document.body.style.backgroundColor = "green"
+};
+
+const onmessage = function (event) {
+    log(`[message] Data received from server: ${event.data}`);
+};
+
+const onclose = function (event) {
     if (event.wasClean) {
-        console.log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+        log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+        document.body.style.backgroundColor = "orangered"
     } else {
-        // e.g. server process killed or network down
-        // event.code is usually 1006 in this case
-        console.log('[close] Connection died');
+        log('[close] Connection died');
+        document.body.style.backgroundColor = "red"
     }
 };
 
-socket.onerror = function (error) {
-    console.log(`[error] ${error.message}`);
+const onerror = function (error) {
+    log(`[error] ${error.message}`);
+    document.body.style.backgroundColor = "red"
 };
 
+const newWebsocket = function () {
+    if (socket != null) socket.close(1000, "Restart login");
+    var mail = document.getElementById("mail").value;
+    var token = document.getElementById("token").value;
+    socket = new WebSocket(`ws://localhost?login=${mail}&token=${token}`, 'echo-protocol');
+    socket.onopen = onopen
+    socket.onmessage = onmessage
+    socket.onclose = onclose
+    socket.onerror = onerror
+}
 
 document.getElementById('login').addEventListener('click', (event) => {
-    socket.close(1000, "Logout");
-    socket = new WebSocket('ws://localhost?login=test&token=test2', 'echo-protocol');
+    newWebsocket();
 });
 document.getElementById('logout').addEventListener('click', (event) => {
-    socket.close(1000, "Logout");
+    if (socket != null) socket.close(1000, "Logout");
 });

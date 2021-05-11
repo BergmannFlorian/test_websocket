@@ -1,6 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<style>
+    *{
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    }
+    body{
+        min-height: 100vh;
+        background-color:orangered;
+        margin: 0;
+        padding: 0;
+    }
+    input{
+        width: 300px;
+    }
+</style>
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,6 +24,8 @@
 </head>
 
 <body>
+    <input id="mail" type="text" placeholder="mail"/>
+    <input id="token" type="text" placeholder="token"/>
     <button id="login">Login</button>
     <button id="logout">Logout</button>
     <div id="log"></div>
