@@ -5,7 +5,8 @@ const log = function (message) {
     var log = document.createElement('div');
     var date = new Date
     log.textContent = date.toLocaleString() + ' ' + message; //slice(0, 24)
-    document.getElementById('log').appendChild(log);
+    var elem = document.getElementById('log');
+    elem.insertBefore(log, elem.firstChild);
 };
 
 const onopen = () => {
@@ -15,7 +16,11 @@ const onopen = () => {
 };
 
 const onmessage = function (event) {
-    log(`[message] Data received from server: ${event.data}`);
+    var data = JSON.parse(event.data);
+    console.log(data);
+    if (data.action == "message") log(`[message] ${data.query.message}`);
+    if (data.action == "userconnected") log(`[notification] ${data.query.name} ${data.query.firstName} is connected`)
+    if (data.action == "userdeconnected") log(`[notification] ${data.query.name} ${data.query.firstName} is deconnected`)
 };
 
 const onclose = function (event) {
@@ -29,6 +34,7 @@ const onclose = function (event) {
 };
 
 const onerror = function (error) {
+    console.log(error)
     log(`[error] ${error.message}`);
     document.body.style.backgroundColor = "red"
 };
@@ -37,7 +43,8 @@ const newWebsocket = function () {
     if (socket != null) socket.close(1000, "Restart login");
     var mail = document.getElementById("mail").value;
     var token = document.getElementById("token").value;
-    socket = new WebSocket(`ws://localhost?login=${mail}&token=${token}`, 'echo-protocol');
+    var domain = document.getElementById("domain").value;
+    socket = new WebSocket(`ws://localhost/user/?login=${mail}&token=${token}&domain=${domain}`);
     socket.onopen = onopen
     socket.onmessage = onmessage
     socket.onclose = onclose
