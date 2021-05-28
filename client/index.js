@@ -21,6 +21,8 @@ const onmessage = function (event) {
     if (data.action == "message") log(`[message] ${data.query.message}`);
     if (data.action == "userconnected") log(`[notification] ${data.query.name} ${data.query.firstName} is connected`)
     if (data.action == "userdeconnected") log(`[notification] ${data.query.name} ${data.query.firstName} is deconnected`)
+    if (data.action == "missnotifications") log(`[notification] ${data.query.dataSet.length} notifications missings`)
+    if (data.action == "newnotification") log(`[notification] New notification on object : ${data.query.id}`)
 };
 
 const onclose = function (event) {
