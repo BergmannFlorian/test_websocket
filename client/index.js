@@ -19,10 +19,11 @@ const onmessage = function (event) {
     var data = JSON.parse(event.data);
     console.log(data);
     if (data.action == "message") log(`[message] ${data.query.message}`);
-    if (data.action == "userconnected") log(`[notification] ${data.query.name} ${data.query.firstName} is connected`)
-    if (data.action == "userdeconnected") log(`[notification] ${data.query.name} ${data.query.firstName} is deconnected`)
-    if (data.action == "missnotifications") log(`[notification] ${data.query.dataSet.length} notifications missings`)
-    if (data.action == "newnotification") log(`[notification] New notification on object : ${data.query.id}`)
+    else if (data.action == "userconnected") log(`[notification] ${data.query.name} ${data.query.firstName} is connected`)
+    else if (data.action == "userdeconnected") log(`[notification] ${data.query.name} ${data.query.firstName} is deconnected`)
+    else if (data.action == "missnotifications") log(`[notification] ${data.query.dataSet.length} notifications missings`)
+    else if (data.action == "notification") log(`[notification] New notification on object : ${data.query.id}`)
+    else log(`[${data.action}] ${data.query}`)
 };
 
 const onclose = function (event) {
@@ -46,7 +47,8 @@ const newWebsocket = function () {
     var mail = document.getElementById("mail").value;
     var token = document.getElementById("token").value;
     var domain = document.getElementById("domain").value;
-    socket = new WebSocket(`ws://localhost/user/?login=${mail}&token=${token}&domain=${domain}`);
+    var to = document.getElementById("to").value;
+    socket = new WebSocket(`${to}/user/?login=${mail}&token=${token}&domain=${domain}`);
     socket.onopen = onopen
     socket.onmessage = onmessage
     socket.onclose = onclose
